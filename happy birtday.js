@@ -4,7 +4,7 @@ let w = (c.width = window.innerWidth),
   hw = w / 2;
 (hh = h / 2),
   (opts = {
-    strings: ["HAPPY", "BIRTHDAY!", "Amina"],
+    strings: ["HAPPY", "BIRTHDAY!", "Amina Seerat"],
     charSize: 30,
     charSpacing: 35,
     lineHeight: 40,
@@ -372,22 +372,29 @@ function anim() {
 }
 
 for (let i = 0; i < opts.strings.length; ++i) {
-  for (var j = 0; j < opts.strings[i].length; ++j) {
-    letters.push(
-      new Letter(
-        opts.strings[i][j],
-        j * opts.charSpacing +
-          opts.charSpacing / 2 -
-          (opts.strings[i].length * opts.charSize) / 2,
-        i * opts.lineHeight +
-          opts.lineHeight / 2 -
-          (opts.strings.length * opts.lineHeight) / 2
-      )
-    );
+  const line = opts.strings[i];
+  const lineWidth = ctx.measureText(line).width;
+
+  let xOffset = opts.cx - lineWidth / 2;
+
+  for (let j = 0; j < line.length; ++j) {
+    const char = line[j];
+    const charWidth = ctx.measureText(char).width;
+
+    const charX = xOffset + charWidth / 2;
+    const charY =
+      i * opts.lineHeight -
+      (opts.strings.length * opts.lineHeight) / 2 +
+      opts.cy;
+
+    letters.push(new Letter(char, charX, charY));
+
+    xOffset += charWidth;
   }
 }
 
 anim();
+
 
 window.addEventListener("resize", function () {
   w = c.width = window.innerWidth;
@@ -398,6 +405,7 @@ window.addEventListener("resize", function () {
 
   ctx.font = opts.charSize + "px Verdana";
 });
+
 
 
 
